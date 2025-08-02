@@ -91,7 +91,7 @@ function getAddonOptions() {
     }
   } else {
     NiceLog(`Debug ha-utils: Not running in Docker within Home Assistant, using default options.`);
-    return { "admin_user": "defaultadmin", "admin_password": "changebydefault" };
+    return { "admin_user": "localdefaultuser", "admin_password": "localdefaultpassword" };
   }
   
 }

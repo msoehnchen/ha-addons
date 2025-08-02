@@ -1,6 +1,7 @@
 const bsqlite3 = require('better-sqlite3');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const fs = require('fs');
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
 
@@ -32,13 +33,16 @@ function _addInitialSetupUser() {
   const userCount = getUserCount();
   if (userCount === 0) {
     NiceLog('Debug user-db.js: No users found, creating initial setup user.');
-    const hashedPassword = bcrypt.hashSync('setmenow', 10);
+    const username = hautils.getAddonOptions().admin_user;
+    const hashedPassword = bcrypt.hashSync(hautils.getAddonOptions().admin_password, 10);
     userDb.prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)')
-      .run('setupuser', hashedPassword, 'setup');
-    NiceLog('Debug user-db.js: Initial setup user created with username: setupuser and password: setmenow');
+      .run(username, hashedPassword, 'setup');
+    NiceLog(`Debug user-db.js: Initial setup user created with username: ${username} and password: ${hautils.getAddonOptions().admin_password}`);
   } else {
-    if (getRoleByUsername('setupuser') === 'setup') {
+    if (getRoleByUsername(hautils.getAddonOptions().admin_user) === 'setup') {
       NiceLog('Debug user-db.js: Initial setup user already exists.');
+    } else {
+      NiceLog('Debug user-db.js: Initial setup user exists but has a different role, not setup.');
     }
     NiceLog(`Debug user-db.js: User count in database: ${userCount}`);
   }
@@ -81,12 +85,25 @@ userDb.exec(`
 )
 `);
 
+// function to remove the user database
+function removeDatabase() {
+  NiceLog(`Debug user-db.js: Removing user database at ${userDbFile}`);
+  userDb.close();
+  try {
+    fs.unlinkSync(userDbFile);
+    NiceLog(`Debug user-db.js: User database removed successfully.`);
+  } catch (err) {
+    NiceLog(`Debug user-db.js: Error removing user database: ${err.message}`);
+  }
+}
+
+
 _addInitialSetupUser();
 
 
 // Debug: get role by username
-const debug_role = getRoleByUsername('setupuser');
-NiceLog(`Debug user-db.js: Role for user 'setupuser' is ${debug_role}`);
+const debug_role = getRoleByUsername(hautils.getAddonOptions().admin_user);
+NiceLog(`Debug user-db.js: Role for user ${hautils.getAddonOptions().admin_user} is ${debug_role}`);
 
 
 // Debug: add a random user
@@ -98,9 +115,12 @@ function _addRandomUser() {
 }
 _addRandomUser(); 
 
+
+
 module.exports = {
   userDb,
   getRoleByUsername,
   getAllUsers,
-  getUserCount
+  getUserCount,
+  removeDatabase
 };

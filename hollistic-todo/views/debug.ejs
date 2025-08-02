@@ -17,5 +17,14 @@ document.getElementById('btnSomething').onclick = async function() {
 };
 </script>
 
+<button id="btnRemoveDbUser">Call API /debug/api/removedb?db=user</button>
+<script>
+document.getElementById('btnRemoveDbUser').onclick = async function() {
+  const res = await fetch('/debug/api/removedb?db=user');
+  const data = await res.json();
+  alert(JSON.stringify(data));
+};
+</script>
+
 </body>
 </html>

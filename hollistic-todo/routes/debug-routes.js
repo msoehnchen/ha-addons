@@ -29,4 +29,21 @@ router.get('/api/something', (req, res) => {
   res.json(result);
 });
 
+function RemoveDb(dbname) {
+  NiceLog(`Debug debug-routes.js: RemoveDb called with dbname: ${dbname}`);
+  // This is a placeholder for an API action that can be called from the debug page
+  if (dbname === 'user') {
+    userDb.removeDatabase();  
+  return { message: 'Remove database action executed successfully', dbName: dbname };
+  } else {
+    return { message: 'No action taken', dbName: dbname };
+  }
+}
+
+router.get('/api/removedb', (req, res) => {
+  const dbName = req.query.db;
+  const result = RemoveDb(dbName);
+  res.json(result);
+});
+
 module.exports = router;
