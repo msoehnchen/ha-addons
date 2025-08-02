@@ -1,6 +1,6 @@
 name: "Hollistic To-Do"
 description: "A simple to-do application with a focus on holistic task management."
-version: "0.1.629"
+version: "0.1.630"
 slug: "hollistic_todo"
 init: false
 arch:
@@ -9,10 +9,12 @@ options:
   admin_user: 'setupuser'
   admin_password: 'changeit'
   api_token: 'randomtoken1234'
+  reset_user_database: false
 schema:
   admin_user: str
   admin_password: str
   api_token: str
+  reset_user_database: bool
 ports:
   3000/tcp: 3000
   3443/tcp: 3444

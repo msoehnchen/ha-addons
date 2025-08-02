@@ -15,6 +15,7 @@ if (!hautils.directoryExists(datafolder)) {
 const userDbFile = path.join(datafolder, 'user.db');
 NiceLog(`Debug user-db.js: Using user database at: ${userDbFile}`);
 
+
 const userDb = new bsqlite3(userDbFile);
 
 
@@ -28,10 +29,13 @@ function getUserCount() {
   return result.count;
 }
 
+
+
+
 // function to add initial setupuser if not exists
-function _addInitialSetupUser() {
+function _addInitialSetupUser(flag_force = false) {
   const userCount = getUserCount();
-  if (userCount === 0) {
+  if (userCount === 0 || flag_force) {
     NiceLog('Debug user-db.js: No users found, creating initial setup user.');
     const username = hautils.getAddonOptions().admin_user;
     const hashedPassword = bcrypt.hashSync(hautils.getAddonOptions().admin_password, 10);
@@ -115,6 +119,10 @@ function removeDatabase() {
   }
 }
 
+// check for config option to reset database....
+if (hautils.getAddonOptions().reset_user_database) {
+  removeDatabase()
+}
 
 _addInitialSetupUser();
 
