@@ -21,7 +21,8 @@ function requireLogin(req, res, next) {
     return next();
   } else {
     NiceLog(`debug express-session-auth: session.user = ${req.session.user}`)
-    return res.status(401).json({ error: 'Unauthorized: Please log in' });
+    return res.status(401).render('not-logged-in'); 
+    //return res.status(401).json({ error: 'Unauthorized: Please log in' });
   }
 }
 

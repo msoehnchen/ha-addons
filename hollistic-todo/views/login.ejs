@@ -37,7 +37,7 @@
 
         const data = await res.json();
         if (res.ok) {
-          message.textContent = 'Login successful!';
+          message.innerHTML = 'Login successful! Go to <a href="/">Main Page</a>';
           // Optionally redirect
           // window.location.href = '/dashboard';
         } else {

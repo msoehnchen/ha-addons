@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const https = require('https');
 const session = require('express-session');
+const { requireApiToken, requireLogin } = require('./utils/express-session-auth');
 const todosRouter = require('./routes/todos-routes');
 const debugRouter = require('./routes/debug-routes');
 const loginRouter = require('./routes/login-routes');
@@ -58,7 +59,7 @@ app.use('/login', loginRouter)
 app.use('/todos', todosRouter);
 app.use('/debug', debugRouter);
 
-app.get('/', (req, res) => {
+app.get('/', requireLogin, (req, res) => {
   NiceLog('Serving landing page');
   res.render('index', { version: ReadVersionFromAddonConfig() });
 });
