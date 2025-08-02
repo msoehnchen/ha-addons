@@ -16,7 +16,32 @@ const userDbFile = path.join(datafolder, 'user.db');
 NiceLog(`Debug user-db.js: Using user database at: ${userDbFile}`);
 
 
-const userDb = new bsqlite3(userDbFile);
+function createDatabase() {
+  const userDb = new bsqlite3(userDbFile); 
+  // Create the users table if it doesn't exist
+  userDb.exec(`
+      CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL unique,
+      password TEXT NOT NULL,
+      role TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+  `);
+}
+
+
+// function to remove the user database
+function removeDatabase() {
+  NiceLog(`Debug user-db.js: Removing user database at ${userDbFile}`);
+  userDb.close();
+  try {
+    fs.unlinkSync(userDbFile);
+    NiceLog(`Debug user-db.js: User database removed successfully.`);
+  } catch (err) {
+    NiceLog(`Debug user-db.js: Error removing user database: ${err.message}`);
+  }
+}
 
 
 
@@ -96,31 +121,7 @@ function getRoleByUsername(username) {
   }
 }
 
-function createDatabase() {
-// Create the users table if it doesn't exist
-userDb.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL unique,
-    password TEXT NOT NULL,
-    role TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-)
-`);
-}
 
-
-// function to remove the user database
-function removeDatabase() {
-  NiceLog(`Debug user-db.js: Removing user database at ${userDbFile}`);
-  userDb.close();
-  try {
-    fs.unlinkSync(userDbFile);
-    NiceLog(`Debug user-db.js: User database removed successfully.`);
-  } catch (err) {
-    NiceLog(`Debug user-db.js: Error removing user database: ${err.message}`);
-  }
-}
 
 createDatabase()
 
