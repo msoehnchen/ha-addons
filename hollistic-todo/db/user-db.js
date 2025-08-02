@@ -15,9 +15,9 @@ if (!hautils.directoryExists(datafolder)) {
 const userDbFile = path.join(datafolder, 'user.db');
 NiceLog(`Debug user-db.js: Using user database at: ${userDbFile}`);
 
+const userDb = new bsqlite3(userDbFile);
 
 function createDatabase() {
-  const userDb = new bsqlite3(userDbFile); 
   // Create the users table if it doesn't exist
   userDb.exec(`
       CREATE TABLE IF NOT EXISTS users (
