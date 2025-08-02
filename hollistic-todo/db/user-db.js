@@ -96,6 +96,7 @@ function getRoleByUsername(username) {
   }
 }
 
+function createDatabase() {
 // Create the users table if it doesn't exist
 userDb.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -106,6 +107,8 @@ userDb.exec(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 )
 `);
+}
+
 
 // function to remove the user database
 function removeDatabase() {
@@ -119,9 +122,12 @@ function removeDatabase() {
   }
 }
 
+createDatabase()
+
 // check for config option to reset database....
 if (hautils.getAddonOptions().reset_user_database) {
-  removeDatabase()
+  removeDatabase();
+  createDatabase();
 }
 
 _addInitialSetupUser();
