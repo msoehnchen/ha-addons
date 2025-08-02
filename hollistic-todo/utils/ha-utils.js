@@ -75,14 +75,25 @@ function TestDirectoryExists(dirPath) {
 
 // read options.json from /data folder
 function getAddonOptions() {
-  const optionsFile = path.join('/data', 'options.json');
-  if (fs.existsSync(optionsFile)) {
-    const file = fs.readFileSync(optionsFile, 'utf8');
-    return JSON.parse(file);
+  if (isRunningInDocker() && isHostnameHollisticTodo()) {
+    try {
+      const optionsFile = path.join('/data', 'options.json');
+      if (fs.existsSync(optionsFile)) {
+        const file = fs.readFileSync(optionsFile, 'utf8');
+        return JSON.parse(file);
+      } else {
+        NiceLog(`Debug ha-utils: Options file not found at ${optionsFile}. Returning empty object.`);
+        return {};
+      }
+    } catch (error) {
+      NiceLog(`Debug ha-utils: Error reading options file: ${error.message}`);
+      return {};
+    }
   } else {
-    NiceLog(`Debug ha-utils: Options file not found at ${optionsFile}. Returning empty object.`);
-    return {};
+    NiceLog(`Debug ha-utils: Not running in Docker within Home Assistant, using default options.`);
+    return { "admin_user": "defaultadmin", "admin_password": "changebydefault" };
   }
+  
 }
 
 module.exports = {
