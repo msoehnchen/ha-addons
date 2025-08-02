@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Info Page</title>
+</head>
+<body>
+  <h1>Directory Listing</h1>
+  <ul>
+    <% files.forEach(function(file) { %>
+      <li>
+        <%= file.isDirectory() ? '📁' : '📄' %> <%= file.name %>
+      </li>
+    <% }); %>
+  </ul>
+  <p><a href="/">Back to Home</a></p>
+</body>
+</html>

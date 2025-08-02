@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Todo App</h1>
+  <a href="/debug">Go to Debug Page</a>
+
+    <div class="main-grid">
+    
+    <!-- Todo Form -->
+    <form id="todo-form">
+        <h2>Add new Todo</h2>
+        <label>
+        Title:
+        <input type="text" name="title">
+        </label><br>
+
+        <label>
+        Text (required):
+        <input type="text" name="text" required>
+        </label><br>
+
+        <label>
+        Start Date:
+        <input type="date" name="start_date">
+        </label><br>
+
+        <label>
+        End Date:
+        <input type="date" name="end_date">
+        </label><br>
+
+        <label>
+        Priority:
+        <input type="text" name="priority">
+        </label><br>
+        
+        <label>
+        Category:
+        <input type="text" name="category">
+        </label><br>
+
+        <button type="submit">Add Todo</button>
+    </form>
+
+    <div id="message"></div>
+
+    <!-- Todo List -->
+    <div id="todo-list">
+      <h2>Todos</h2>
+      <ul id="todos"></ul>
+    </div>
+
+  </div>
+  
+  <script>
+    const form = document.getElementById('todo-form');
+    const message = document.getElementById('message');
+    const todoList = document.getElementById('todos');
+
+    async function fetchTodos() {
+        console.log('Fetching todos...');
+        const res = await fetch('/todos');
+        const todos = await res.json();
+
+        todoList.innerHTML = '';
+
+        todos.forEach(todo => {
+            const li = document.createElement('li');
+            li.textContent = `${todo.title || ''} - ${todo.text}`;
+            todoList.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('/todos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          message.textContent = `✅ Todo created with ID: ${result.id}`;
+          form.reset();
+          fetchTodos(); // Refresh the list
+        } else {
+          message.textContent = `❌ Error: ${result.error}`;
+        }
+      } catch (err) {
+        message.textContent = `❌ Network error: ${err.message}`;
+      }
+    });
+
+    // Load existing todos
+    fetchTodos();
+  </script>
+</body>
+</html>

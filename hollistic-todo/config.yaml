@@ -1,0 +1,21 @@
+name: "Hollistic To-Do"
+description: "A simple to-do application with a focus on holistic task management."
+version: "0.1.626"
+slug: "hollistic_todo"
+init: false
+arch:
+  - amd64
+options:
+  admin_user: 'setupuser'
+  admin_password: 'changeit'
+schema:
+  admin_user: str
+  admin_password: str
+ports:
+  3000/tcp: 3000
+  3443/tcp: 3444
+map:
+  - addon_config:rw
+  - ssl:ro
+  - data:rw
+image: "msoehnchen/hollistic-todo"

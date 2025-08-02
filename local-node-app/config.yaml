@@ -1,0 +1,16 @@
+name: "Local Node App"
+description: "Node.js application with ingress support\nMainly as template and test.\nUses Node.js, Express, and Ingress for Home Assistant.\nSupports both HTTP and HTTPS.\nSSL certificates are expected in /ssl folder (via LetsEncrypt for example). Alternative private certs in addon-config folder (limited funtionality due to 'insecure' https).\nConfigurable via Home Assistant Add-on configuration (to-do).\nLogs are written to /config/logs/local-node-app.log.\nUses a custom Dockerfile for building the image"
+version: "1.0.32-bb"
+slug: "local_node_app"
+init: false
+ingress: true
+arch:
+  - amd64
+ports:
+  3000/tcp: 3000
+  3443/tcp: 3443
+map:
+  - addon_config:rw
+  - ssl:ro
+
+  

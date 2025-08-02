@@ -1,0 +1,16 @@
+key.pem
+openssl
+cert.pem
+
+# ignore config folder as is is provided by Home Assistant
+local-node-app/config/*
+
+hollistic-todo/data_local/
+hollistic-todo/test_*
+
+*.code-workspace
+.vscode/
+
+# ignore dev cmd files
+*.cmd
+hollistic-todo/*.cmd

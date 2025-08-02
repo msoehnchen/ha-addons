@@ -1,0 +1,19 @@
+**/*.env
+# Ignore all .env files in any directory
+
+# ignore git-related files
+.git/
+.gitignore
+
+# ignore node_modules
+#**/node_modules
+
+# ignore certificates
+cert.pem
+key.pem
+openssl
+
+# ignore config folder as is is provided by Home Assistant
+local-node-app/config/
+
+notes.txt

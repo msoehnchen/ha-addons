@@ -1,0 +1,27 @@
+**/*.env
+# Ignore all .env files in any directory
+
+# ignore git-related files
+.git/
+.gitignore
+
+# ignore node_modules
+node_modules
+npm-debug.log
+
+# ignore certificates
+cert.pem
+key.pem
+openssl
+
+# ignore config folder as is is provided by Home Assistant
+hollistic-todo/config/
+hollistic-todo/data_local/
+hollistic-todo/test_*
+hollistic-todo/notes.txt
+
+notes.txt
+
+# ignore dev cmd files
+*.cmd
+hollistic-todo/*.cmd

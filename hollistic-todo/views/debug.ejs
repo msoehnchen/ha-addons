@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hollistic To-Do DEBUG</title>
+</head>
+<body>
+  <h1>DEBUG PAGE - <%= version %></h1>
+  <p>This is a simple Node.js application running on Home Assistant.</p>
+  <p><a href="/">Go to Main Page</a></p>
+
+<button id="btnSomething">Call API /debug/api/something?testvalue=true</button>
+<script>
+document.getElementById('btnSomething').onclick = async function() {
+  const res = await fetch('/debug/api/something?testvalue=true');
+  const data = await res.json();
+  alert(JSON.stringify(data));
+};
+</script>
+
+</body>
+</html>

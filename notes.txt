@@ -1,0 +1,24 @@
+setup HTTPS:
+
+Cloudflare:
+    -> set SSL mode to strict
+
+LetsEncrypt via HA-Addon:
+    * need DNS:Zone:edit API token from cloudflare
+    -> generate Certs
+    -> download Certs
+
+Nginx Proxy Manager:
+    -> SSL Certificates
+        -> add custom, with certs from LetsEncrypt
+            -> destination is the nodeapp:sslport (ex: homeassistant.local:3443)
+    -> add proxy host with custom SSL
+
+
+
+Docker Image:
+because of issues that HA does not allow to fetch files for NPM during build,
+The image is build locally and pushed to DockerHub.
+
+Then, it is specified in the Addon config.yaml as via image: and also version:
+Version needs to match the docker-image tag!!

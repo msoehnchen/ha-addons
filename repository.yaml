@@ -1,0 +1,4 @@
+# https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
+name: Hollistic HomeAssistant Add-Ons
+url: 'https://github.com/msoehnchen/ha-addons'
+maintainer: Marcel Holl <m.soehnchen@gmail.com>
