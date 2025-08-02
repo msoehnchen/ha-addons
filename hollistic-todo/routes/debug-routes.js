@@ -2,13 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
+const { requireApiToken, requireLogin } = require('../utils/express-session-auth');
 const todoDb = require('../db/todo-db');
 const userDb = require('../db/user-db');
 
 NiceLog('Debug debug-routes.js: Initializing debug routes');
 
+
+
+// Apply the middleware to all routes in this router
+//router.use(requireApiToken); // Uncomment this line if you want to require API token for all debug routes
+
+
 // main entry of this debug route. It will serve ejs file debug.ejs from views folder.
-router.get('/', (req, res) => {
+router.get('/', requireLogin, (req, res) => {
   try {
     NiceLog(`DEBUG-ROUTES: Debug route accessed`);
     res.render('debug', { version: hautils.ReadVersionFromAddonConfig() });
@@ -23,7 +30,7 @@ function APIdoSomething(value_boolean) {
   return { message: 'API action executed successfully', receivedValue: value_boolean };
 }
 
-router.get('/api/something', (req, res) => {
+router.get('/api/something', requireApiToken, (req, res) => {
   const testValue = req.query.testvalue;
   const result = APIdoSomething(testValue);
   res.json(result);

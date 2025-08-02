@@ -91,9 +91,15 @@ function getAddonOptions() {
     }
   } else {
     NiceLog(`Debug ha-utils: Not running in Docker within Home Assistant, using default options.`);
-    return { "admin_user": "localdefaultuser", "admin_password": "localdefaultpassword" };
+    return { "admin_user": "localdefaultuser", "admin_password": "localdefaultpassword", "api_token": "localdefaulttoken" };
   }
-  
+}
+
+// function to set the environment variable for the API token
+function setApiTokenFromOptions() {
+  const apiToken = getAddonOptions().api_token;
+  process.env.DEBUG_API_TOKEN = apiToken;
+  NiceLog(`Debug ha-utils: API token set to: ${apiToken}`);
 }
 
 module.exports = {
@@ -104,5 +110,6 @@ module.exports = {
     getHostOSHostname,
     ReadVersionFromAddonConfig,
     isRunningInDocker,
-    isHostnameHollisticTodo
+    isHostnameHollisticTodo,
+    setApiTokenFromOptions
 };

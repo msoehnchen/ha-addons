@@ -48,6 +48,8 @@ function _addInitialSetupUser() {
   }
 }
 
+
+
 // function to add a new user with hashed password
 function addUser(username, password, role = 'user') {
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -59,6 +61,22 @@ function addUser(username, password, role = 'user') {
 function getAllUsers() {
   const stmt = userDb.prepare('SELECT * FROM users');
   return stmt.all();
+}
+
+// find a user by username and return the a user object with the username, password and role
+function findUser(username) {
+  const stmt = userDb.prepare('SELECT username, password, role FROM users WHERE username = ?');
+  const user = stmt.get(username);
+  if (user) {
+    return {
+      username: user.username,
+      password: user.password, // In production, use hashed passwords!
+      role: user.role
+    };
+  } else {
+    NiceLog(`Debug user-db.js: No user found with username: ${username}`);
+    return null;
+  }
 }
 
 // get role by username
@@ -122,5 +140,6 @@ module.exports = {
   getRoleByUsername,
   getAllUsers,
   getUserCount,
-  removeDatabase
+  removeDatabase,
+  findUser
 };

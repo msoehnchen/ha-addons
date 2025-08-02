@@ -2,8 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const https = require('https');
+const session = require('express-session');
 const todosRouter = require('./routes/todos-routes');
 const debugRouter = require('./routes/debug-routes');
+const loginRouter = require('./routes/login-routes');
 const hautils = require('./utils/ha-utils');
 const userDb = require('./db/user-db');
 
@@ -24,6 +26,8 @@ hautils.TestDirectoryExists('/nonexistingdir');
 
 NiceLog('Debug app.js: read options from /data/options.json ...');
 NiceLog(`Debug app.js: ha-utils.getAddonOptions: ${JSON.stringify(hautils.getAddonOptions())}`);
+NiceLog(`Dubug app.js: Set API token from options...`);
+hautils.setApiTokenFromOptions(); // Set the API token from options
 NiceLog(`Debug app.js: ha-utils.getHostOSVersion: ${hautils.getHostOSVersion()}`);
 NiceLog(`Debug app.js: ha-utils.getHostOSHostname: ${hautils.getHostOSHostname()}`);
 NiceLog(`Debug app.js: ha-utils.isRunningInDocker: ${hautils.isRunningInDocker()}`);
@@ -35,12 +39,22 @@ NiceLog(`Server options created: ${ServerOptions}`);
 
 // Middleware to serve static files (if needed)
 const app = express();
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: ServerOptions.flag_enable_https } // Set to true if using HTTPS
+}));
 
+
+
+app.use('/login', loginRouter)
 app.use('/todos', todosRouter);
 app.use('/debug', debugRouter);
 
