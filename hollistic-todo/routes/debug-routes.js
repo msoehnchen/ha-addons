@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const router = express.Router();
 const { NiceLog } = require('../utils/utils');
@@ -5,6 +6,7 @@ const hautils = require('../utils/ha-utils');
 const { requireApiToken, requireLogin } = require('../utils/express-session-auth');
 const todoDb = require('../db/todo-db');
 const userDb = require('../db/user-db');
+const { route } = require('./todos-routes');
 
 NiceLog('Debug debug-routes.js: Initializing debug routes');
 
@@ -52,5 +54,26 @@ router.get('/api/removedb', (req, res) => {
   const result = RemoveDb(dbName);
   res.json(result);
 });
+
+
+
+// download the todo database file
+function downloadDatabaseTodo() {
+  const dbPath = hautils.getDataFolder();
+  const dbFile = 'todo.db';
+  return {dbPath, dbFile};
+}
+
+router.get('/api/download-todo', requireLogin, (req, res) => {
+  NiceLog('Debug debug-routes.js: hit endpoint /api/download-todo')
+  const downloadfile = downloadDatabaseTodo()
+  res.download(path.join(downloadfile.dbPath, downloadfile.dbFile), downloadfile.dbFile, (err) => {
+    if (err) {
+      NiceLog(`Debug debug-routes.js: error while trying to download ${downloadfile.dbPath} / ${downloadfile.dbFile}: ${err.message}`)
+      res.status(500).send(`Error downloading file`)
+    }
+  } )
+});
+
 
 module.exports = router;

@@ -26,5 +26,27 @@ document.getElementById('btnRemoveDbUser').onclick = async function() {
 };
 </script>
 
+<button id="dlTodoDB">download user.db</button>
+<script>
+document.getElementById('dlTodoDB').onclick = async function () {
+  const res = await fetch('/debug/api/download-todo');
+  if (!res.ok) {
+    alert("Error downloading file");
+    return;
+  }
+
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'todo.db'; // file name for save dialog
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+};
+</script>
+
+
 </body>
 </html>
