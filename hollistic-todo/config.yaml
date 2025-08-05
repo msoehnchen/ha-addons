@@ -1,6 +1,6 @@
 name: "Hollistic To-Do"
 description: "A simple to-do application with a focus on holistic task management."
-version: "0.1.636"
+version: "0.1.637"
 slug: "hollistic_todo"
 init: false
 arch:
