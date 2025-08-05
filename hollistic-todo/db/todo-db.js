@@ -1,11 +1,12 @@
 const path = require('path');
 const fs = require('fs');
+const { appSettings } = require('../app-config')
 const Database = require('better-sqlite3');
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
 
 
-const dbPath = path.join(hautils.getDataFolder(), 'todo.db');
+const dbPath = path.join(hautils.getDataFolder(), appSettings.dbs.todo.filename);
 NiceLog(`Debug todo-db.js: Using database at: ${dbPath}`);
 
 const todoDb = new Database(dbPath);

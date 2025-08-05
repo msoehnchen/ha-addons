@@ -26,7 +26,7 @@ document.getElementById('btnRemoveDbUser').onclick = async function() {
 };
 </script>
 
-<button id="dlTodoDB">download todo.db</button>
+<button id="dlTodoDB">download todo.sqlite</button>
 <script>
 document.getElementById('dlTodoDB').onclick = async function () {
   const res = await fetch('/debug/api/download-todo');
@@ -39,7 +39,7 @@ document.getElementById('dlTodoDB').onclick = async function () {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'todo.db'; // file name for save dialog
+  a.download = 'todo.sqlite'; // file name for save dialog
   document.body.appendChild(a);
   a.click();
   a.remove();

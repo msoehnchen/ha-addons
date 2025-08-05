@@ -4,9 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
+const { appSettings } = require('../app-config')
 
 
-const userDbFile = path.join(hautils.getDataFolder(), 'user.db');
+const userDbFile = path.join(hautils.getDataFolder(), appSettings.dbs.user.filename);
 NiceLog(`Debug user-db.js: Using user database at: ${userDbFile}`);
 
 const userDb = new bsqlite3(userDbFile);

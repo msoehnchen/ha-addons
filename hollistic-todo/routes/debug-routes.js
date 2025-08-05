@@ -3,10 +3,12 @@ const express = require('express');
 const router = express.Router();
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
+const { appSettings } = require('../app-config')
 const { requireApiToken, requireLogin } = require('../utils/express-session-auth');
 const todoDb = require('../db/todo-db');
 const userDb = require('../db/user-db');
 const { route } = require('./todos-routes');
+const session = require('express-session');
 
 NiceLog('Debug debug-routes.js: Initializing debug routes');
 
@@ -60,16 +62,18 @@ router.get('/api/removedb', (req, res) => {
 // download the todo database file
 function downloadDatabaseTodo() {
   const dbPath = hautils.getDataFolder();
-  const dbFile = 'todo.db';
-  return {dbPath, dbFile};
+  return {dbPath};
 }
 
 router.get('/api/download-todo', requireLogin, (req, res) => {
   NiceLog('Debug debug-routes.js: hit endpoint /api/download-todo')
   const downloadfile = downloadDatabaseTodo()
-  res.download(path.join(downloadfile.dbPath, downloadfile.dbFile), downloadfile.dbFile, (err) => {
+  NiceLog(`Debug debug-routes.js: User wants ${JSON.stringify(req.session.user)} to download ${downloadfile.dbPath} / ${appSettings.dbs.todo.filename}`)
+  res.setHeader('Content-Disposition', `attachment; filename="${appSettings.dbs.todo.filename}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.download(path.join(downloadfile.dbPath, appSettings.dbs.todo.filename), appSettings.dbs.todo.filename, (err) => {
     if (err) {
-      NiceLog(`Debug debug-routes.js: error while trying to download ${downloadfile.dbPath} / ${downloadfile.dbFile}: ${err.message}`)
+      NiceLog(`Debug debug-routes.js: error while trying to download ${downloadfile.dbPath} / ${appSettings.dbs.todo.filename}: ${err.message}`)
       res.status(500).send(`Error downloading file`)
     }
   } )

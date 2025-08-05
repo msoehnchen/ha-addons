@@ -8,6 +8,7 @@ const { requireApiToken, requireLogin } = require('./utils/express-session-auth'
 const todosRouter = require('./routes/todos-routes');
 const debugRouter = require('./routes/debug-routes');
 const loginRouter = require('./routes/login-routes');
+const logoutRouter = require('./routes/logout-routes')
 const hautils = require('./utils/ha-utils');
 const userDb = require('./db/user-db');
 
@@ -52,11 +53,14 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: ServerOptions.flag_enable_https } // Set to true if using HTTPS
+  cookie: { 
+    secure: ServerOptions.flag_enable_https,
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  } // Set to true if using HTTPS
 }));
 
 
-
+app.use('/logout', logoutRouter)
 app.use('/login', loginRouter)
 app.use('/todos', todosRouter);
 app.use('/debug', debugRouter);
