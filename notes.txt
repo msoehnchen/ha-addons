@@ -22,3 +22,10 @@ The image is build locally and pushed to DockerHub.
 
 Then, it is specified in the Addon config.yaml as via image: and also version:
 Version needs to match the docker-image tag!!
+
+
+
+HA addon-logs:
+    container = addon_9d78eb51_hollistic_todo
+
+    journalctl --vacuum-time=24h -t addon_9d78eb51_hollistic_todo

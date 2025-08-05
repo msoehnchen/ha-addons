@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const https = require('https');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const { requireApiToken, requireLogin } = require('./utils/express-session-auth');
 const todosRouter = require('./routes/todos-routes');
 const debugRouter = require('./routes/debug-routes');
@@ -47,6 +48,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
+  store: new SQLiteStore({db: 'sessions.sqlite', dir: hautils.getDataFolder()}),
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: true,

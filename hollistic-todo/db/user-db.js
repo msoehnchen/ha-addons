@@ -6,13 +6,7 @@ const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
 
 
-// check if folder data exists, if not use data_local
-let datafolder = '/data';
-if (!hautils.directoryExists(datafolder)) {
-  datafolder = path.join(__dirname, '..', '/data_local');
-}
-
-const userDbFile = path.join(datafolder, 'user.db');
+const userDbFile = path.join(hautils.getDataFolder(), 'user.db');
 NiceLog(`Debug user-db.js: Using user database at: ${userDbFile}`);
 
 const userDb = new bsqlite3(userDbFile);

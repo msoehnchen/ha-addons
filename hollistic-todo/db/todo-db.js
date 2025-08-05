@@ -4,13 +4,8 @@ const Database = require('better-sqlite3');
 const { NiceLog } = require('../utils/utils');
 const hautils = require('../utils/ha-utils');
 
-// check if folder data exists, if not use data_local
-let datafolder = '/data';
-if (!hautils.directoryExists(datafolder)) {
-  datafolder = path.join(__dirname, '..', '/data_local');
-}
 
-const dbPath = path.join(datafolder, 'todo.db');
+const dbPath = path.join(hautils.getDataFolder(), 'todo.db');
 NiceLog(`Debug todo-db.js: Using database at: ${dbPath}`);
 
 const todoDb = new Database(dbPath);

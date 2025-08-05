@@ -102,12 +102,23 @@ function setApiTokenFromOptions() {
   NiceLog(`Debug ha-utils: API token set to: ${apiToken}`);
 }
 
+// fucntion to return local or server data folder
+function getDataFolder() {
+  let datafolder = '/data';
+  if (!directoryExists(datafolder)) {
+    datafolder = path.join(__dirname, '..', '/data_local');
+  }
+  return datafolder
+
+}
+
 module.exports = {
     directoryExists,
     TestDirectoryExists,
     getAddonOptions,
     getHostOSVersion,
     getHostOSHostname,
+    getDataFolder,
     ReadVersionFromAddonConfig,
     isRunningInDocker,
     isHostnameHollisticTodo,
